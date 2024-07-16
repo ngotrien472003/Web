@@ -1,0 +1,25 @@
+extends ../../layouts/default.pug
+
+block main
+    -if(item.title)
+        h1(class="text-blue mb-5") #{item.title}
+    if(item.price)
+        div(class="mb-4 h4") Giá :<b>#{item.price}$</b>
+    if(item.discountPercentage)
+        div(class="mb-4 h4") Giảm :<b>#{item.discountPercentage}%</b>
+    if(item.thumbnail)
+        div(class="mb-4")
+            img(src=item.thumbnail, alt=item.title, style="width: 100px heigth: 100px")
+    if(item.status)
+        div(class="mb-4 h4")
+            span Trạng thái:
+            if(item.status == "active")
+                span(class="btn btn-success") Đang hoạt động
+            else
+                span(class="btn btn-danger") Ngừng kinh doanh
+
+    if(item.stock)
+        div(class="mb-4 h4") Còn lại: <b>#{item.stock}</b>
+    if(item.description)
+        div(class="md-4 h4") #{item.description}
+    

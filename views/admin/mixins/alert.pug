@@ -1,0 +1,19 @@
+mixin alert-success(time)
+     div(
+      class="alert alert-success"
+      show-alert
+      time-alert=time
+    ) #{messages.success} <span close-alert> X </span>
+
+mixin alert-delete(time)
+     div(
+      class="alert alert-success"
+      show-alert
+      time-alert=time
+    ) #{messages.delete} <span close-alert> X </span>
+mixin alert-error(time)
+     div(
+      class="alert alert-danger"
+      show-alert
+      time-alert=time
+    ) #{messages.error} <span close-alert> X </span>

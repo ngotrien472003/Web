@@ -26,10 +26,15 @@
   }
   
   .body .main {
+    padding: 15px;
+    
     margin: 15px;
     position: relative;
     left: 150px;
     width: calc(100% - 180px);
+  }
+  .body{
+    background-color: bisque;
   }
   /* End Body */
   
@@ -56,4 +61,37 @@
     padding-bottom: 20px; /* Khoảng cách từ dưới lên cho phần phân trang */
     background-color: #f8f9fa; /* Nền màu xám nhạt cho phần phân trang */
   }
-  
+  [show-alert].alert-hidden{
+    animation-name: alert-hidden;
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+  }
+  @keyframes alert-hidden {
+    from{
+      right: 15px;
+    }
+    to{
+      right: -100px;
+      display: none;
+    }
+  }
+  [show-alert]{
+    position: fixed;
+    top: 70px;
+    right: 15px;
+    z-index: 9999;
+  }
+  [show-alert][close-alert]{
+    background-color: #515151;
+    border-radius: 50px;
+  }
+  .image-preview[src=""]{
+    display: none;
+  }
+  .image-preview{
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+    margin-top: 10px;
+    padding: 5px;
+  }

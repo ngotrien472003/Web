@@ -1,7 +1,14 @@
 extends ../../layouts/default.pug
 include ../../mixins/filter-State.pug
 include ../../mixins/search.pug
+include ../../mixins/pagination
+include ../../mixins/form-change-multi
+include ../../mixins/alert
 block main
+  - if (messages.success)
+    +alert-success(5000)
+  - if(messages.delete)
+    +alert-delete(5000)
   h1(class="mb-4") #{pageTitle}
   .card.mb-3
     .card-header Bộ lọc và Tìm kiếm
@@ -14,19 +21,32 @@ block main
   .card.mb-3 
     .card-header Danh sách 
     .card-body
-      table.table.table-hover.table-sm
+      .row 
+        .col-8
+          +formChangeMulti(`/${prefixAdmin}/products/change-multi?_method=PATCH`)
+        .col-4.text-right
+          a(
+            href=`/${prefixAdmin}/products/create`
+            class="btn btn-outline-success"
+          ) + Thêm mới
+      table.table.table-hover.table-sm(table)
         thead
           tr
+            td 
+              input(type="checkbox" name="checkAll")
             th STT
             th Hình ảnh
             th Tiêu đề
             th Giá
+            th Vị trí
             th Trạng thái
             th Hành động
 
         tbody
           each item, index in products
             tr
+              td
+                input(type="checkbox" name="id" value=item.id)
               td #{index+1}
               td
                 img(
@@ -37,24 +57,61 @@ block main
                 )
               td #{item.title}
               td #{item.price}$
+              td 
+                input(
+                  type="number"
+                  min='1'
+                  name="position"
+                  value=item.position
+                  style ="width:50px"
+                )
               td
                 if(item.status == "active")
-                  a(href="#" class="badge badge-success") Hoạt động
+                  a(
+                    href="javascript:;" 
+                    class="badge badge-success"
+                    button-change-status
+                    data-id=item.id 
+                    data-status=item.status
+                    ) Hoạt động
                 else
-                  a(href="#" class="badge badge-danger") Dừng hoạt động
+                  a(
+                    href="javascript:;" 
+                    class="badge badge-danger"
+                    button-change-status
+                    data-id=item.id 
+                    data-status=item.status
+                    ) Dừng hoạt động
               td
-                button(class="btn btn-warning btn-sm") Sửa
-                button(class="btn btn-danger btn-sm ml-1") Xóa
+                a(
+                  href=`/${prefixAdmin}/products/detail/${item.id}`
+                  data-id=item.id 
+                  class="btn btn-secondary btn-sm mr-3"
+                ) Chi tiết
+                a(
+                  href=`/${prefixAdmin}/products/edit/${item.id}`
+                  button-edit
+                  data-id=item.id 
+                  class="btn btn-warning btn-sm mr-3"
+                ) Sửa
+                button(
+                  class="btn btn-danger btn-sm "
+                  button-delete
+                  data-id=item.id 
+                  ) Xóa
 
-  .pagination-container
-    nav 
-      ul(class="pagination")
-        - if(objectPagination.currentPage>1)
-            li(class="page-item")
-              button(class="page-link" button-pagination=objectPagination.currentPage-1) Trang trước
-        - for(var i=1;i<=(objectPagination.totalPage);i++)
-            li(class=`page-item ${i==objectPagination.currentPage ? 'active' : ''}`)
-              button(class="page-link" button-pagination=i) #{i}
-        - if(objectPagination.currentPage<objectPagination.totalPage)
-            li(class="page-item")
-              button(class="page-link" button-pagination=objectPagination.currentPage+1) Trang kế tiếp
+  +Pagination(pagination)
+  form(
+    action=""
+    method="POST"
+    form-change-status
+    data-path=`/${prefixAdmin}/products/change-status`
+  )
+
+  form(
+    action=""
+    method="POST"
+    form-delete-item
+    data-path=`/${prefixAdmin}/products/delete`
+  ) 
+

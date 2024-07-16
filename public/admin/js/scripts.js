@@ -45,3 +45,154 @@ if(buttonPagination.length>0){
     })
 }
 // End Pagination
+//change status
+const buttonChangeStatus=document.querySelectorAll("[button-change-status]")
+if(buttonChangeStatus.length>0){
+    const formChangeStatus=document.querySelector("[form-change-status]")
+    const path=formChangeStatus.getAttribute("data-path");
+    //console.log(formChangeStatus)
+    buttonChangeStatus.forEach((button)=>{
+        button.addEventListener("click",(e)=>{
+            const statusCurrent=button.getAttribute("data-status")
+            const id=button.getAttribute("data-id")
+            const status=statusCurrent=="active" ? 'inactive' : 'active';
+            const Action = `${path}/${status}/${id}?_method=PATCH`
+            formChangeStatus.action=Action;
+           
+            //console.log(path)
+            formChangeStatus.submit();
+        })
+    })
+}
+//console.log(buttonChangeStatus)
+//End change status
+const table=document.querySelector("[table]");
+if(table){
+    const btnCheckAll=table.querySelector(" input[name='checkAll'] ")
+    const form=document.querySelector("[form-change-multi]");
+    //console.log(form)
+    //console.log(btnChange)
+    //console.log(btnCheckAll)
+    const btnCheck=table.querySelectorAll("input[name='id']");
+    //console.log(btnCheck)
+    if(btnCheckAll){
+        btnCheckAll.addEventListener("click",(e)=>{
+            if(btnCheckAll.checked){
+                btnCheck.forEach((btn)=>{
+                    btn.checked=true
+                })
+            }else{
+                btnCheck.forEach((btn)=>{
+                    btn.checked=false
+                }) 
+            }
+        })
+    }
+    const cntButtonCheck=btnCheck.length;
+    if(cntButtonCheck>0){
+        btnCheck.forEach((btn)=>{
+            btn.addEventListener("click",(e)=>{
+                const cnt=table.querySelectorAll("input[name='id']:checked").length
+                if(cnt==cntButtonCheck){
+                    btnCheckAll.checked=true
+                }else{
+                    btnCheckAll.checked=false
+                }
+            })
+        })
+    }
+    const formIDS=form.querySelector("input[name='ids']")
+    //console.log(formIDS)
+    form.addEventListener("submit",(e) =>{
+        e.preventDefault();
+        const type=e.target.elements.type.value;
+        if(type=="delete-item"){
+            const isConfirm=confirm("Bạn có chắc chắn muốn xóa những bản ghi này?");
+            if(!isConfirm){
+                return;
+            }
+        }
+        //console.log(type)
+        const ids=table.querySelectorAll("input[name='id']:checked");
+        const value=[]
+        if(ids.length>0){
+            ids.forEach((btn) =>{
+                if(type=="change-position"){
+                    const inputPosition=btn.closest("tr").querySelector("input[name='position']");
+                    const valuePosition=inputPosition.value
+                    //console.log(valuePosition)
+                    value.push(`${btn.value}:${valuePosition}`)
+                }else{
+                    value.push(btn.value)
+                }
+                
+            })
+            //console.log(value)
+            //console.log(value.join("-"))
+            formIDS.value=value.join("-")
+            //console.log(value)
+            form.submit();
+        }else{
+            alert("Please select at least one item to update")
+        }
+        
+    })
+    
+}
+
+//Delete
+const btnDelete=document.querySelectorAll("[button-delete]");
+const formDelete=document.querySelector("[form-delete-item]");
+if(formDelete){
+    const path=formDelete.getAttribute("data-path")
+    btnDelete.forEach((btn) =>{
+        btn.addEventListener("click",(e) =>{
+            const isConfirm=confirm("Bạn có chắc chắn muốn xóa bản ghi này");
+            if(isConfirm){
+                const id=btn.getAttribute("data-id");
+                formDelete.action=`${path}/${id}?_method=DELETE`;
+                formDelete.submit();
+            }
+            
+        })
+    })
+}
+
+//console.log(formDelete)
+//console.log(btnDelete)
+
+//End Delete
+
+//show-alert
+const showAlert=document.querySelector("[show-alert]");
+if(showAlert){
+    const time=showAlert.getAttribute("time-alert")
+    setTimeout(()=>{
+        showAlert.classList.add("alert-hidden")
+        console.log(showAlert)
+    },time);
+    const closeAlert=showAlert.querySelector("[close-alert]")
+    closeAlert.addEventListener("click",(e) =>{
+        showAlert.classList.add("alert-hidden")
+    })
+}
+
+//console.log(showAlert)
+
+//End show-alert
+
+//Preview
+const divPreview=document.querySelector("[block-preview]")
+const inpPreview=divPreview.querySelector("input[inp-preview]");
+const imgPreview=divPreview.querySelector("img[img-preview]")
+if(divPreview){
+    inpPreview.addEventListener("change",(e) =>{
+        const file=e.target.files[0];
+        if(file){
+            imgPreview.src=URL.createObjectURL(file)
+            //console.log(imgPreview.src)
+        }
+    })
+}
+//console.log(imgPreview)
+//End Preview
