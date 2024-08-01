@@ -183,16 +183,61 @@ if(showAlert){
 
 //Preview
 const divPreview=document.querySelector("[block-preview]")
-const inpPreview=divPreview.querySelector("input[inp-preview]");
-const imgPreview=divPreview.querySelector("img[img-preview]")
 if(divPreview){
-    inpPreview.addEventListener("change",(e) =>{
-        const file=e.target.files[0];
-        if(file){
-            imgPreview.src=URL.createObjectURL(file)
+    const inpPreview=divPreview.querySelector("input[inp-preview]");
+    const imgPreview=divPreview.querySelector("img[img-preview]")
+    if(divPreview){
+        inpPreview.addEventListener("change",(e) =>{
+            const file=e.target.files[0];
+            if(file){
+                imgPreview.src=URL.createObjectURL(file)
             //console.log(imgPreview.src)
         }
     })
 }
 //console.log(imgPreview)
+}
+
 //End Preview
+//sortMulti
+const boxSort = document.querySelector("[sort]")
+if(boxSort){
+    let url=new URL(window.location.href)
+    //console.log(boxSort)
+    const sortSelect=boxSort.querySelector("[sort-select]")
+    sortSelect.addEventListener("change",(e)=>{
+        //e.preventDefault()
+       const [sortKey,sortValue]=sortSelect.value.split("-")
+       //console.log(sortKey,sortValue)
+        url.searchParams.set("sortKey",sortKey)
+        url.searchParams.set("sortValue",sortValue)
+        const string=`${sortKey}-${sortValue}`
+    // console.log(string)
+    // const selectOption=sortSelect.querySelector(`option[value="${string}"]`)
+    // selectOption.selected=true
+        window.location.href=url.href
+        
+        //
+    })
+    const sortKey=url.searchParams.get("sortKey")
+    const sortValue=url.searchParams.get("sortValue")
+    if(sortKey && sortValue){
+        //console.log(sortKey)
+    const string=`${sortKey}-${sortValue}`
+    //console.log(string)
+    const selectOption=sortSelect.querySelector(`option[value="${string}"]`)
+    selectOption.selected=true
+    }
+    
+    const sortClear=boxSort.querySelector("[sort-clear]")
+    if(sortClear){
+        sortClear.addEventListener("click",(e)=>{
+            url.searchParams.delete("sortKey")
+            url.searchParams.delete("sortValue")
+            window.location.href=url.href
+        })
+    }
+}
+
+//console.log(boxSort)
+//endsortMulti

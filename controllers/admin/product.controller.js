@@ -22,11 +22,16 @@ module.exports.index=async(req,res) =>{
             deleted: false,
         })
         const objectPagination=Pagination(4,total,req.query)
+        let sortObj={}
+        if(req.query.sortKey && req.query.sortValue){
+            sortObj[req.query.sortKey]=req.query.sortValue
+        }else{
+            sortObj["position"]="asc"
+        }
+        
         //console.log(objectPagination.currentPage)
         const products= await Product.find(find)
-        .sort({
-            position: "asc"
-        })
+        .sort(sortObj)
         .limit(objectPagination.limit)
         .skip(objectPagination.skip);
         // products.forEach((i)=>{
@@ -57,7 +62,7 @@ module.exports.changeStatus=async(req,res) =>{
     } catch (error) {
         res.redirect("back");
     }
-    req.flash('sucess', 'Cập nhật trạng thái thành công!');
+    req.flash('success', 'Cập nhật trạng thái thành công!');
     res.redirect("back");
    //console.log(req.params)
 };
