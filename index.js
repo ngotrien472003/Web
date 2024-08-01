@@ -26,9 +26,9 @@ app.use(flash());
 //End flash-express
 
 connectDatabase.connect();
-app.set("views","./views");
+app.set("views",`${__dirname}/views`);
 app.set("view engine","pug");
-app.use(express.static("public"));
+app.use(express.static(`${__dirname}/public`));
 app.locals.prefixAdmin=systemconfig.prefixAdmin;
 routerClient.routerClient(app);
 routerAdmin.routerAdmin(app);
